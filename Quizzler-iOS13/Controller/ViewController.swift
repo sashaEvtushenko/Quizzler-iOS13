@@ -10,10 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet var scoreLabel: UILabel!
     @IBOutlet var questionLabel: UILabel!
     @IBOutlet var progressBar: UIProgressView!
-    @IBOutlet var trueButton: UIButton!
-    @IBOutlet var falseButton: UIButton!
+    @IBOutlet var choiceOneButton: UIButton!
+    @IBOutlet var choiceTwoButton: UIButton!
+    @IBOutlet var choiceThreeButton: UIButton!
     
     var quizBrain = QuizBrain()
     
@@ -34,16 +36,21 @@ class ViewController: UIViewController {
         
         quizBrain.nextQuestion()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.updateUI()
-        }
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
     
-    func updateUI() {
+    @objc func updateUI() {
+        let possibleAnswers = quizBrain.getPossibleAnswers()
+        
         questionLabel.text = quizBrain.getQuestionText()
+        choiceOneButton.setTitle(possibleAnswers[0], for: .normal)
+        choiceTwoButton.setTitle(possibleAnswers[1], for: .normal)
+        choiceThreeButton.setTitle(possibleAnswers[2], for: .normal)
         progressBar.progress = quizBrain.getProgress()
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
+        scoreLabel.text = quizBrain.getScore()
+        choiceOneButton.backgroundColor = UIColor.clear
+        choiceTwoButton.backgroundColor = UIColor.clear
+        choiceThreeButton.backgroundColor = UIColor.clear
     }
     
 }
